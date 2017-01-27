@@ -6,11 +6,11 @@
 %   Stackenblocken Pixel construction
 %
 % @kellertuer, 2017-01-01
-\documentclass[a4paper,DIV=15]{scrartcl}
+\documentclass[a4paper,DIV=19]{scrartcl}
 \usepackage[no-math]{fontspec}
 \usepackage{xunicode,xltxtra}
 \usepackage{tikz}
-\usepackage{unicode-math}
+\usepackage{unicode-math,graphicx}
 \usepackage[ngerman]{babel}
 \usetikzlibrary{calc,external}
 \tikzexternalize
@@ -35,6 +35,7 @@
 % Details anzeigen oder nur Schnittlinien?
 \newif\ifshowDetails
 \showDetailstrue
+%\showDetailsfalse
 \ifshowDetails
   \tikzexternalize[prefix=SkizzeKompl-]
 \else
@@ -45,13 +46,13 @@
 % Größenangaben
 %
 % if unsure leave them as they're because that's the production standard for now
-\newcommand\DisplayWidth{19.4} %Displaybreite (brutto)
+\newcommand\DisplayWidth{17} %Displaybreite (brutto)
 \newcommand\DisplayHeight{11} %DisplayHöhe
-\newcommand\DisplayBorder{1} %(Holz-)Rand um das Displayplexi frontplare Thickness
-\newcommand\Depth{5} %Tiefe hinter dem Display bzw unter dem Display
-\newcommand\Height{5} %Höhe unter dem Display bzw unter dem Display
-\newcommand\Boxboxdepth{3} % Tiefe der Gelbdbox
-\newcommand\Boxboxheight{6} % Höhe der inneren Box
+\newcommand\DisplayBorder{2} %(Holz-)Rand um das Displayplexi frontplare Thickness
+\newcommand\Depth{7} %Tiefe hinter dem Display bzw unter dem Display
+\newcommand\Height{7} %Höhe unter dem Display bzw unter dem Display
+\newcommand\Boxboxdepth{4} % Tiefe der Gelbdbox
+\newcommand\Boxboxheight{8} % Höhe der inneren Box
 \newcommand\wood{0.4} % Das ist mein Holz
 
 \newcommand\slotWidth{4}
@@ -70,9 +71,10 @@
   An felgender erster Grafik sind alle Werte verzeichnet, die sich per Variable ändern lassen:
   Tiefe (oben) Höhe (vorne), Displayhöhe, (in dieser Grafik nicht enthalten: Displaybreite),
   Holzdicke, sowie Höhe und Tiefe der inneren Box.
+  \newpage\enlargethispage{3\baselineskip}
   \begin{center}
     \tikzsetnextfilename{Links}
-%    \tikzexternaldisable
+    \tikzexternaldisable
     \begin{tikzpicture}
       % Elementgrenzen und andere Holzteile im Anschnitt
       \ifshowDetails
@@ -82,7 +84,8 @@
       \fi
       % Umriss
       \draw[main] (\wood,-\wood) -- ++ ({((\Depth-\wood-\wood/sin(60))/4},0) -- ++ (0,\wood)
-          -- ++ ({(\Depth-\wood-\wood/sin(60))/4},0) -- ++ (0,-\wood) -- ++ ({(\Depth-\wood-\wood/sin(60))/4},0)
+          -- ++ ({(\Depth-\wood-\wood/sin(60))/4},0) -- ++ (0,-\wood) 
+          -- ++ ({(\Depth-\wood-\wood/sin(60))/4},0)
           -- ++ (0,\wood) -- ++ ({(\Depth-\wood-\wood/sin(60))/4},0) node (TR) {}
         -- ++ (300:{(\side+\wood/tan(60))/4}) -- ++ (30:\wood)
         -- ++ (300:{(\side+\wood/tan(60))/4}) -- ++ (210:\wood)
@@ -100,11 +103,12 @@
         -- ++ (90: { (\sideHeight+\Height-2*\wood)/4}) -- ++ (180:\wood)
         -- ++ (90: { (\sideHeight+\Height-2*\wood)/4}) -- ++ (0:\wood)
         -- ++ (90: { (\sideHeight+\Height-2*\wood)/4});
-    % Löcher für die MIttleren Wände
+    % Löcher für die Mittleren Wände
     \draw[main] (0,0) ++ (0:{\wood/2+\Boxboxdepth}) node (BTR) {}
     ++(270:{(\Boxboxheight+3*\wood/2)/2-1})
     -- ++(270:2) -- ++(0:\wood) -- ++(90:2) -- ++(180:\wood);
-      \node[anchor = south,align=center] at ( $(BottomRight) !.5! (Bottom Left) $) {\Large IceBoxWoodBox\\\vspace{2\baselineskip}};
+      \node[anchor = south,align=center] at ( $(BR) !.5! (BL) $)
+        {\Large IceBoxWoodBox\\\vspace{2\baselineskip}};
       \draw[main] ({\wood+(\Boxboxdepth+\wood/2)/2-1},-\Boxboxheight-\wood/2)
         rectangle ({\wood+(\Boxboxdepth+\wood/2)/2+1},-\Boxboxheight-3*\wood/2);
       \ifshowDetails
@@ -195,14 +199,14 @@
       \\
       1 – (linke) Seitenansicht, die rechte Seite ist natürlich identisch, bzw. lediglich gespiegelt.
   \end{center}
-  \newpage
+  \newpage\enlargethispage{4\baselineskip}
   \begin{center}
     \tikzexternaldisable
     \begin{tikzpicture}[rotate=90]
       \ifshowDetails
         \draw[base] (0,0) rectangle ({\DisplayWidth+2*\DisplayBorder},-\Depth);
       \fi
-      \draw[main] (0,-\wood)
+      \draw[main] (0,-\wood) 
             -- ++(270:{((\Depth-\wood-\wood/sin(60))/4}) -- ++(0:\wood)
             -- ++(270:{((\Depth-\wood-\wood/sin(60))/4}) -- ++(180:\wood)
             -- ++(270:{((\Depth-\wood-\wood/sin(60))/4}) -- ++(0:\wood)
@@ -223,24 +227,60 @@
             -- ++ (180:{\wood+\topF/5});
         \draw[main]
         % slot
-        ({(\DisplayWidth+2*\DisplayBorder)/2-\slotWidth/2},{-\Boxboxdepth/2+\slotHeight/2})
+        ({(\DisplayWidth+2*\DisplayBorder)/2-\slotWidth/2},{-\wood/2-\Boxboxdepth/2+\slotHeight/2})
         rectangle
-        ({(\DisplayWidth+2*\DisplayBorder)/2+\slotWidth/2},{-\Boxboxdepth/2-\slotHeight/2});
+        ({(\DisplayWidth+2*\DisplayBorder)/2+\slotWidth/2},{-\wood/2-\Boxboxdepth/2-\slotHeight/2});
         \draw[main]
         % holes for boxbox back
-        ({(\DisplayWidth+2*\DisplayBorder)/4-1},-\Boxboxdepth-\wood/2)
+        ({(\DisplayWidth+2*\DisplayBorder)/4-1},-\Boxboxdepth-3*\wood/2)
         rectangle
-        ({(\DisplayWidth+2*\DisplayBorder)/4+1},-\Boxboxdepth+\wood/2);
+        ({(\DisplayWidth+2*\DisplayBorder)/4+1},-\Boxboxdepth-\wood/2);
         \draw[main]
         % holes for boxbox back
-        ({3*(\DisplayWidth+2*\DisplayBorder)/4-1},-\Boxboxdepth-\wood/2)
+        ({3*(\DisplayWidth+2*\DisplayBorder)/4-1},-\Boxboxdepth-3*\wood/2)
         rectangle
-        ({3*(\DisplayWidth+2*\DisplayBorder)/4+1},-\Boxboxdepth+\wood/2);
+        ({3*(\DisplayWidth+2*\DisplayBorder)/4+1},-\Boxboxdepth-\wood/2);
       \ifshowDetails
-        \draw[minor] (\wood,-\Boxboxdepth+\wood/2) -- ({\DisplayWidth+2*\DisplayBorder-\wood},-\Boxboxdepth+\wood/2);
         \draw[minor] (\wood,-\Boxboxdepth-\wood/2) -- ({\DisplayWidth+2*\DisplayBorder-\wood},-\Boxboxdepth-\wood/2);
-        \node[xshift=-.5\baselineskip,rotate=90] (A) at ({(\DisplayWidth+2*\DisplayBorder)/2},0) {Back};
-        \node[xshift=.5\baselineskip,rotate=90] (B) at ({(\DisplayWidth+2*\DisplayBorder)/2},-\Depth) {Front};
+        \draw[minor] (\wood,-\Boxboxdepth-3*\wood/2) -- ({\DisplayWidth+2*\DisplayBorder-\wood},-\Boxboxdepth-3*\wood/2);
+        \node[xshift=-.5\baselineskip,rotate=90] (A) at ({(\DisplayWidth+2*\DisplayBorder)/2},0) {Hinten};
+        \node[xshift=.5\baselineskip,rotate=90] (B) at ({(\DisplayWidth+2*\DisplayBorder)/2},-\Depth) {Vorne};
+        % unten
+        \draw[measure] ({-.5*\measureOffSet},0) -- ++ (270:{\wood+\Depth-\wood-\wood/sin(60)}) node[midway,below]
+          {\pgfmathparse{10*(\wood+\Depth-\wood/sin(60))}\pgfmathprintnumber{\pgfmathresult}\,mm};
+        \draw[measureW] ({-1.5*\measureOffSet},0) -- ++ (270:{\wood});
+        \draw[measure] ({-1.5*\measureOffSet},0) ++ (270:{\wood}) -- ++(270:{ (\Depth-\wood-\wood/sin(60))/4}) node [midway,below]
+          {\pgfmathparse{10*(((\Depth-\wood-\wood/sin(60))/4}\pgfmathprintnumber{\pgfmathresult}\,mm};
+        \draw[measure2] ({-1.5*\measureOffSet},0) ++ (270:{\wood+(\Depth-\wood-\wood/sin(60))/4})
+          -- ++(270:{ (\Depth-\wood-\wood/sin(60))/4});
+        \draw[measure2] ({-1.5*\measureOffSet},0) ++ (270:{\wood+2*(\Depth-\wood-\wood/sin(60))/4})
+          -- ++(270:{ (\Depth-\wood-\wood/sin(60))/4});
+        \draw[measure2] ({-1.5*\measureOffSet},0) ++ (270:{\wood+3*(\Depth-\wood-\wood/sin(60))/4})
+          -- ++(270:{ (\Depth-\wood-\wood/sin(60))/4});
+        \draw[measureW] ({-1.5*\measureOffSet},0) ++ (270:{\wood+4*(\Depth-\wood-\wood/sin(60))/4})
+          -- ++(270:{\wood});
+        \draw[measureW] ({-2*\measureOffSet},0) ++ (270:{\wood/2+\Boxboxdepth}) -- ++(270:\wood);
+        \draw[measure] ({-2.5*\measureOffSet},0) ++ (270:{\wood}) 
+        -- ++ (270:{\Boxboxdepth}) node[midway,below]
+          {\pgfmathparse{10*(\Boxboxdepth)}\pgfmathprintnumber{\pgfmathresult}\,mm (innere Tiefe)};
+        \draw[measure] ({-3.5*\measureOffSet},0) ++ (270:{(\wood/2+\Boxboxdepth/2-\slotHeight/2)}) 
+        -- ++ (270:{\slotHeight}) node[midway,below]
+          {\pgfmathparse{10*(\slotHeight)}\pgfmathprintnumber{\pgfmathresult}\,mm (Geldschlitztiefe)};
+        % links
+        \draw[measure] (0,\measureOffSet) -- ++ (0:{\topF+2*\wood}) node[midway,below,rotate=-90]
+    {\pgfmathparse{10*(\topF+2*\wood)}\pgfmathprintnumber{\pgfmathresult}\,mm\ %
+      (davon \pgfmathparse{10*\DisplayWidth}\pgfmathprintnumber{\pgfmathresult}\,mm\ Display-Breite
+      und 2\(\times\)\pgfmathparse{10*\DisplayBorder}\pgfmathprintnumber{\pgfmathresult}\,mm\ Display-Rand)};
+    \draw[measureW] (0,2*\measureOffSet) -- ++ (0:{\wood});
+    \draw[measure] (0,2*\measureOffSet) ++ (0:\wood) -- ++(0:{\topF/5}) node[midway,below,rotate=-90]
+      {\pgfmathparse{10*(\topF/5}\pgfmathprintnumber{\pgfmathresult}\,mm};
+    \draw[measure2] (0,2*\measureOffSet) ++ (0:{\wood+\topF/5}) -- ++(0:{\topF/5});
+    \draw[measure2] (0,2*\measureOffSet) ++ (0:{\wood+2*\topF/5}) -- ++(0:{\topF/5});
+    \draw[measure2] (0,2*\measureOffSet) ++ (0:{\wood+3*\topF/5}) -- ++(0:{\topF/5});
+    \draw[measure2] (0,2*\measureOffSet) ++ (0:{\wood+4*\topF/5}) -- ++(0:{\topF/5});
+    \draw[measureW] (0,2*\measureOffSet) ++ (0:{\wood+5*\topF/5}) -- ++(0:{\wood});
+    \draw[measure] (0,3*\measureOffSet) ++ (0:{\wood+\topF/2-\slotWidth/2}) -- ++(0:{\slotWidth}) node[midway,below,,rotate=-90]
+      {\pgfmathparse{10*(\slotWidth}\pgfmathprintnumber{\pgfmathresult}\,mm (Geldschlitzt-Breite)};
       \fi
     \end{tikzpicture}
     \\
@@ -249,7 +289,7 @@
   \newpage
   \begin{center}  
     \tikzexternaldisable
-    \begin{tikzpicture}[rotate=90]
+    ~\hspace*{-1.25cm}\begin{tikzpicture}[rotate=90]
       \ifshowDetails
       \draw[base] (0,0) rectangle ({\DisplayWidth+2*\DisplayBorder},{-\sideHeight-\Height});
       \fi
@@ -282,10 +322,49 @@
       \draw[main] ({3*(\DisplayWidth+2*\DisplayBorder)/4-1},-\Boxboxheight-3*\wood/2)
         rectangle ({3*(\DisplayWidth+2*\DisplayBorder)/4+1},-\Boxboxheight-\wood/2);
       \ifshowDetails
-        \node[xshift=-.5\baselineskip,rotate=90] (A) at ({(\DisplayWidth+2*\DisplayBorder)/2},0) {top};
-        \node[xshift=.5\baselineskip,rotate=90] (B) at ({(\DisplayWidth+2*\DisplayBorder)/2},{-\sideHeight-\Depth}) {bottom};
+        \node[xshift=-.5\baselineskip,rotate=90] (A) at ({(\DisplayWidth+2*\DisplayBorder)/2},0) {Oben};
+        \node[xshift=.5\baselineskip,rotate=90] (B) at ({(\DisplayWidth+2*\DisplayBorder)/2},{-\sideHeight-\Depth}) {Unten};
         \draw[minor] (\wood,-\Boxboxheight-3*\wood/2) -- (\DisplayWidth+2*\DisplayBorder-\wood,-\Boxboxheight-3*\wood/2);
         \draw[minor] (\wood,-\Boxboxheight-\wood/2) -- (\DisplayWidth+2*\DisplayBorder-\wood,-\Boxboxheight-\wood/2);
+        % unten
+    \draw[measure] (-0.5*\measureOffSet,0) -- ++ (270: {\wood+(\sideHeight+\Height-2*\wood)/4}) node[midway,below]
+      {\pgfmathparse{10*(\wood+(\sideHeight+\Height-2*\wood)/4}\pgfmathprintnumber{\pgfmathresult}\,mm};
+    \draw[measure] (-0.5*\measureOffSet,0) ++ (270: {\wood+(\sideHeight+\Height-2*\wood)/4})
+    -- ++ (270:{(\sideHeight+\Height-2*\wood)/4}) node[midway, below]
+      {\pgfmathparse{10*((\sideHeight+\Height-2*\wood)/4}\pgfmathprintnumber{\pgfmathresult}\,mm};
+    \draw[measure2] (-0.5*\measureOffSet,0) ++ (270: {\wood+2*(\sideHeight+\Height-2*\wood)/4})
+    -- ++ (270:{(\sideHeight+\Height-2*\wood)/4});
+    \draw[measure2] (-0.5*\measureOffSet,0) ++ (270: {\wood+3*(\sideHeight+\Height-2*\wood)/4})
+    -- ++ (270:{(\sideHeight+\Height-2*\wood)/4});
+    \draw[measureW] (-1.5*\measureOffSet,0) -- ++ (270:\wood);
+    \draw[measure] (-1.5*\measureOffSet,-\wood) -- ++ (270: {\Boxboxheight}) node[midway,below]
+      {\pgfmathparse{10*(\Boxboxheight)}\pgfmathprintnumber{\pgfmathresult}\,mm (innere Höhe)};
+    \draw[measureW] (-2*\measureOffSet,{-\wood/2-\Boxboxheight}) -- ++ (270:\wood);
+        % links
+        \draw[measure] (0,\measureOffSet) -- ++ (0:{\topF+2*\wood}) node[midway,below,rotate=-90]
+    {\pgfmathparse{10*(\topF+2*\wood)}\pgfmathprintnumber{\pgfmathresult}\,mm\ %
+      (davon \pgfmathparse{10*\DisplayWidth}\pgfmathprintnumber{\pgfmathresult}\,mm\ Display-Breite
+      und 2\(\times\)\pgfmathparse{10*\DisplayBorder}\pgfmathprintnumber{\pgfmathresult}\,mm\ Display-Rand)};
+    \draw[measure] (0,2*\measureOffSet) -- ++(0:{\wood+\topF/5}) node[midway,below,rotate=-90]
+      {\pgfmathparse{10*(\wood+\topF/5)}\pgfmathprintnumber{\pgfmathresult}\,mm};
+    \draw[measure] (0,2*\measureOffSet) ++ (0:{\wood+\topF/5}) -- ++(0:{\topF/5}) node[midway,below,rotate=-90]
+      {\pgfmathparse{10*(\topF/5)}\pgfmathprintnumber{\pgfmathresult}\,mm};
+    \draw[measure2] (0,2*\measureOffSet) ++ (0:{\wood+2*\topF/5}) -- ++(0:{\topF/5}) node[midway,below,rotate=-90]
+      {\pgfmathparse{10*(\topF/5)}\pgfmathprintnumber{\pgfmathresult}\,mm};
+    \draw[measure2] (0,2*\measureOffSet) ++ (0:{\wood+3*\topF/5}) -- ++(0:{\topF/5}) node[midway,below,rotate=-90]
+      {\pgfmathparse{10*(\topF/5)}\pgfmathprintnumber{\pgfmathresult}\,mm};
+    \draw[measure2] (0,2*\measureOffSet) ++ (0:{\wood+4*\topF/5}) -- ++(0:{\topF/5+\wood})  node[midway,below,rotate=-90]
+      {\pgfmathparse{10*(\wood+\topF/5)}\pgfmathprintnumber{\pgfmathresult}\,mm};
+    \draw[measure] (0,3*\measureOffSet) -- ++ (0:{(\DisplayWidth+2*\DisplayBorder)/4-1}) node[midway,below,rotate=-90]
+      {\pgfmathparse{10*((\DisplayWidth+2*\DisplayBorder)/4-1)}\pgfmathprintnumber{\pgfmathresult}\,mm};
+    \draw[measure] (0,3*\measureOffSet) ++ (0:{(\DisplayWidth+2*\DisplayBorder)/4-1}) -- ++(0:2) node[midway,below,rotate=-90]
+      {\pgfmathparse{20}\pgfmathprintnumber{\pgfmathresult}\,mm};
+    \draw[measure] (0,3*\measureOffSet) ++ (0:{(\DisplayWidth+2*\DisplayBorder)/4+1}) -- ++(0:{(\DisplayWidth+2*\DisplayBorder)/2-2}) node[midway,below,rotate=-90]
+      {\pgfmathparse{10*( (\DisplayWidth+2*\DisplayBorder)/2-2)}\pgfmathprintnumber{\pgfmathresult}\,mm};
+    \draw[measure] (0,3*\measureOffSet) ++ (0:{(\DisplayWidth+2*\DisplayBorder)/4+1+(\DisplayWidth+2*\DisplayBorder)/2-2}) -- ++(0:2) node[midway,below,rotate=-90]
+      {\pgfmathparse{20}\pgfmathprintnumber{\pgfmathresult}\,mm};
+    \draw[measure] (0,3*\measureOffSet) ++ (0:{3*(\DisplayWidth+2*\DisplayBorder)/4+1}) -- ++(0:{(\DisplayWidth+2*\DisplayBorder)/4-1}) node[midway,below,rotate=-90]
+      {\pgfmathparse{10*((\DisplayWidth+2*\DisplayBorder)/4-1)}\pgfmathprintnumber{\pgfmathresult}\,mm};
       \fi
     \end{tikzpicture}
     \\
@@ -322,6 +401,21 @@
       \ifshowDetails
         \node[xshift=-.5\baselineskip,rotate=90] (A) at ({(\DisplayWidth+2*\DisplayBorder)/2},0) {Back};
         \node[xshift=.5\baselineskip,rotate=90] (B) at ({(\DisplayWidth+2*\DisplayBorder)/2},{-\sideWidth-\Depth}) {Front};
+        % links
+        \draw[measure] (0,\measureOffSet) -- ++ (0:{\topF+2*\wood}) node[midway,below,rotate=-90]
+    {\pgfmathparse{10*(\topF+2*\wood)}\pgfmathprintnumber{\pgfmathresult}\,mm\ %
+      (davon \pgfmathparse{10*\DisplayWidth}\pgfmathprintnumber{\pgfmathresult}\,mm\ Display-Breite
+      und 2\(\times\)\pgfmathparse{10*\DisplayBorder}\pgfmathprintnumber{\pgfmathresult}\,mm\ Display-Rand)};
+    \draw[measure] (0,2*\measureOffSet) -- ++(0:{\wood+\topF/5}) node[midway,below,rotate=-90]
+      {\pgfmathparse{10*(\wood+\topF/5)}\pgfmathprintnumber{\pgfmathresult}\,mm};
+    \draw[measure] (0,2*\measureOffSet) ++ (0:{\wood+\topF/5}) -- ++(0:{\topF/5}) node[midway,below,rotate=-90]
+      {\pgfmathparse{10*(\topF/5)}\pgfmathprintnumber{\pgfmathresult}\,mm};
+    \draw[measure2] (0,2*\measureOffSet) ++ (0:{\wood+2*\topF/5}) -- ++(0:{\topF/5}) node[midway,below,rotate=-90]
+      {\pgfmathparse{10*(\topF/5)}\pgfmathprintnumber{\pgfmathresult}\,mm};
+    \draw[measure2] (0,2*\measureOffSet) ++ (0:{\wood+3*\topF/5}) -- ++(0:{\topF/5}) node[midway,below,rotate=-90]
+      {\pgfmathparse{10*(\topF/5)}\pgfmathprintnumber{\pgfmathresult}\,mm};
+    \draw[measure2] (0,2*\measureOffSet) ++ (0:{\wood+4*\topF/5}) -- ++(0:{\topF/5+\wood})  node[midway,below,rotate=-90]
+      {\pgfmathparse{10*(\wood+\topF/5)}\pgfmathprintnumber{\pgfmathresult}\,mm};
       \fi
     \end{tikzpicture}
     \\
@@ -354,11 +448,36 @@
       % -- ++ (180:{\topF/5}) -- ++(270:\wood)
       % -- ++ (180:{\topF/5}) -- ++(90:\wood)
       % -- ++ (180:{\wood+\topF/5})
-      cycle
-      ;
+      cycle;
+      \node[font=\fontsize{40}{50}\selectfont,rotate=90] (T) at ({\topF/2-1.5},{-\Height/2-\wood}) {icebox.nobreakspace.org};
+      \node[rotate=90,anchor=east] (T) at ({\topF+\wood/2},{-\Height/2}) {\includegraphics[height=4cm]{img/soda-white}};
+      \node[font=\Huge, rotate=90] (T2) at ({\topF/2},{-2*\wood}) {Klick dir 'ne Mate.};
       \ifshowDetails
-        \node[xshift=-.5\baselineskip,rotate=90] (A) at ({(\DisplayWidth+2*\DisplayBorder)/2},0) {top};
-        \node[xshift=.5\baselineskip,rotate=90] (B) at ({(\DisplayWidth+2*\DisplayBorder)/2},{-\Height}) {bottom};
+        \node[xshift=-.5\baselineskip,rotate=90] (A) at ({(\DisplayWidth+2*\DisplayBorder)/2},0) {oben, ohne Finger, Kante zur Schräge};
+        \node[xshift=.5\baselineskip,rotate=90] (B) at ({(\DisplayWidth+2*\DisplayBorder)/2},{-\Height}) {Unten};
+        % links
+        \draw[measure] (0,\measureOffSet) -- ++ (0:{\topF+2*\wood}) node[midway,below,rotate=-90]
+    {\pgfmathparse{10*(\topF+2*\wood)}\pgfmathprintnumber{\pgfmathresult}\,mm\ %
+      (davon \pgfmathparse{10*\DisplayWidth}\pgfmathprintnumber{\pgfmathresult}\,mm\ Display-Breite
+      und 2\(\times\)\pgfmathparse{10*\DisplayBorder}\pgfmathprintnumber{\pgfmathresult}\,mm\ Display-Rand)};
+    \draw[measure] (0,2*\measureOffSet) -- ++(0:{\wood+\topF/5}) node[midway,below,rotate=-90]
+      {\pgfmathparse{10*(\wood+\topF/5)}\pgfmathprintnumber{\pgfmathresult}\,mm};
+    \draw[measure] (0,2*\measureOffSet) ++ (0:{\wood+\topF/5}) -- ++(0:{\topF/5}) node[midway,below,rotate=-90]
+      {\pgfmathparse{10*(\topF/5)}\pgfmathprintnumber{\pgfmathresult}\,mm};
+    \draw[measure2] (0,2*\measureOffSet) ++ (0:{\wood+2*\topF/5}) -- ++(0:{\topF/5}) node[midway,below,rotate=-90]
+      {\pgfmathparse{10*(\topF/5)}\pgfmathprintnumber{\pgfmathresult}\,mm};
+    \draw[measure2] (0,2*\measureOffSet) ++ (0:{\wood+3*\topF/5}) -- ++(0:{\topF/5}) node[midway,below,rotate=-90]
+      {\pgfmathparse{10*(\topF/5)}\pgfmathprintnumber{\pgfmathresult}\,mm};
+    \draw[measure2] (0,2*\measureOffSet) ++ (0:{\wood+4*\topF/5}) -- ++(0:{\topF/5+\wood})  node[midway,below,rotate=-90]
+      {\pgfmathparse{10*(\wood+\topF/5)}\pgfmathprintnumber{\pgfmathresult}\,mm};
+        % rechts
+        \draw[measure] (0,0) ++(0:-.5*\measureOffSet) -- ++(270:\Height) node[midway,below]
+          {\pgfmathparse{10*\Height}\pgfmathprintnumber{\pgfmathresult}\,mm (Höhe)};
+        \draw[measure] (0,0) ++(0:-1.5*\measureOffSet) -- ++(270:\Height/4) node[midway,below]
+          {\pgfmathparse{10*\Height/4}\pgfmathprintnumber{\pgfmathresult}\,mm};
+        \draw[measure2] (0,0) ++(0:-1.5*\measureOffSet) ++(270:\Height/4) -- ++(270:\Height/4);
+        \draw[measure2] (0,0) ++(0:-1.5*\measureOffSet) ++(270:2*\Height/4) -- ++(270:\Height/4);
+        \draw[measure2] (0,0) ++(0:-1.5*\measureOffSet) ++(270:3*\Height/4) -- ++(270:\Height/4);
       \fi
     \end{tikzpicture}
     \\
