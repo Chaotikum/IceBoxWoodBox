@@ -553,7 +553,7 @@
       -- ++ (270:{(\side+\wood/tan(60))/4});
     \draw[measure2] (0,0) ++ (180:1.5*\measureOffSet) ++ (270:{3*(\side+\wood/tan(60))/4})
       -- ++ (270:{(\side+\wood/tan(60))/4-2*\wood*cos(60)/sin(60)}) node[midway,below]
-      {\pgfmathparse{10*(\side+\wood/tan(60))/4 -2*\wood*cos(60)/sin(60)}\pgfmathprintnumber{\pgfmathresult}\,mm};
+      {\pgfmathparse{10*( (\side+\wood/tan(60))/4 -2*\wood*cos(60)/sin(60))}\pgfmathprintnumber{\pgfmathresult}\,mm};
       \fi
     \end{tikzpicture}
     \\
