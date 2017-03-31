@@ -34,29 +34,29 @@ polygon(points=concat(
     ));
 // Rear
 color([1,.7,.3]) translate([0,-totalHeight-extend])
-difference() {
-  linear_extrude(wW)
-    polygon(points=concat(
-    genLine([-width/2,0],[-width/2,totalHeight],fH=wW,fC=2, cO=1,fTR=0),
-    genLine([-width/2,totalHeight],[width/2+wW,totalHeight],fH=wW,fC=2,cO=1),
-    genLine([width/2+wW,totalHeight],[width/2+wW,0],fH=wW,fC=2, cO=1, fTR=0),
-    genLine([width/2+wW,0],[-width/2,0],fH=wW,fC=2,cO=1,fTR=0)
-    ));
-    //holes for inner plate
-    translate([0,iBHeight]) rotate(90,[1,0,0])
-    linear_extrude(wW) polygon(points=concat(
-        [[width/2,3*wW]],
-        genLine([width/2,wW],[-width/2,wW],fH=1.2*wW,fC=2,cO=1,fTR=1),
-        [[-width/2,3*wW]]
+linear_extrude(wW)
+    difference() {
+        polygon(points=concat(
+        genLine([-width/2,0],[-width/2,totalHeight],fH=wW,fC=2, cO=1,fTR=0),
+        genLine([-width/2,totalHeight],[width/2+wW,totalHeight],fH=wW,fC=2,cO=1),
+        genLine([width/2+wW,totalHeight],[width/2+wW,0],fH=wW,fC=2, cO=1, fTR=0),
+        genLine([width/2+wW,0],[-width/2,0],fH=wW,fC=2,cO=1,fTR=0)
         ));
-    //Hole for Klappe
-   translate([0,iBHeight-wW,0]) rotate(180,[0,0,1]) linear_extrude(1.02*wW)
-    hull() {
- polygon(points=[[-width/2+displayBorder,0],[width/2-displayBorder,0],
-    [width/2-displayBorder, iBHeight/2],[-width/2+displayBorder,iBHeight/2]]);
-translate([-width/2+displayBorder+cRadius, iBHeight-displayBorder-cRadius, 0])
-    circle(r=cRadius,$fn=360);
-translate([width/2-displayBorder-cRadius, iBHeight-displayBorder-cRadius, 0])
+        //holes for inner plate
+        translate([0,iBHeight]) rotate(90,[1,0,0])
+            polygon(points=concat(
+            [[width/2,3*wW]],
+            genLine([width/2,wW],[-width/2,wW],fH=1.2*wW,fC=2,cO=1,fTR=1),
+            [[-width/2,3*wW]]
+          ));
+        //Hole for Klappe
+        translate([0,iBHeight-wW,0]) rotate(180,[0,0,1])
+        hull() {
+            polygon(points=[[-width/2+displayBorder,0],[width/2-displayBorder,0],
+              [width/2-displayBorder, iBHeight/2],[-width/2+displayBorder,iBHeight/2]]);
+            translate([-width/2+displayBorder+cRadius, iBHeight-displayBorder-cRadius, 0])
+            circle(r=cRadius,$fn=360);
+            translate([width/2-displayBorder-cRadius, iBHeight-displayBorder-cRadius, 0])
     circle(r=cRadius,$fn=360);
 };
 }
@@ -64,21 +64,21 @@ translate([width/2-displayBorder-cRadius, iBHeight-displayBorder-cRadius, 0])
 //Top
 color([.4,.7,.7])
 translate([0,-totalHeight-depth-2*extend])
-difference() {
 linear_extrude(wW)
+difference() {
 polygon(points=concat( //2*wW on each because they all turn fingers inwards
     genLine([-width/2,0],[-width/2,depth],fH=wW,fC=2,fTR=0),
     genLine([-width/2,depth],[width/2+wW,depth],fH=wW,fC=2,cO=1),
     genLine([width/2,depth],[width/2,0],fH=wW,fC=2),
     genLine([width/2+wW,0],[-width/2,0],fH=wW,fC=2,cO=1)
     ));
-translate([wW/2,0,0])linear_extrude(1.02*wW)
+translate([wW/2,0,0])
     polygon(points=[[-slotWidth/2,1/3*depth-slotDepth/2],
              [-slotWidth/2,1/3*depth+slotDepth/2],
              [slotWidth/2,1/3*depth+slotDepth/2],
              [slotWidth/2,1/3*depth-slotDepth/2]]);
-translate([0,iBDepth,-wW]) rotate(90,[1,0,0])
-linear_extrude(wW) polygon(points=concat(
+translate([0,iBDepth,0]) rotate(90,[1,0,0])
+    polygon(points=concat(
      [[width/2,0]],
      genLine([width/2,wW],[-width/2+wW,iBHeight-wW],fH=1.02*wW,fC=2,cO=1,fTR=0)
      [[-width/2,0]]));
@@ -99,15 +99,15 @@ sideT = side + wW/tan(60)-2*wW*cos(60)/sin(60);
 color([.9,.9,.9])
 translate([0,depth+totalDepth+sideT/2+2*extend,wW])
 rotate(180,[1,0,0])
-difference() {
 linear_extrude(wW)
+difference() {
 polygon(points=concat(
     genLine([-width/2,-sideT/2],[-width/2,sideT/2],fH=wW,fC=2,fTR=0), //top
     genLine([-width/2,sideT/2],[width/2,sideT/2],fH=0,fC=2,cO=1),
     genLine([width/2,sideT/2],[width/2,-sideT/2-wW*cos(60)/2],fH=wW,fC=2),
     genLine([width/2+wW,-sideT/2-wW*cos(60)/2],[-width/2,-sideT/2-wW*cos(60)/2],fH=wW,fC=2,cO=1,fTR=0)
     ));
-linear_extrude(1.02*wW) translate([wW/2,0])
+translate([wW/2,0])
 polygon(points=[[-width/2+displayBorder,-side/2+displayBorder],
     [width/2-displayBorder,-side/2+displayBorder],
     [width/2-displayBorder,side/2-displayBorder],
@@ -118,8 +118,9 @@ translate([width/2+extend,wW]) rotate(0,[0,1,0]) sidePlate();
 translate([-width/2+wW-extend,wW,wW]) rotate(180,[0,1,0]) sidePlate();
 
 module sidePlate() {
+linear_extrude(wW)
 difference() {
-linear_extrude(wW) polygon(points=concat(
+  polygon(points=concat(
     genLine([0,0],[totalHeight,0],fH=wW,fC=2, cO=1,fTR=0)
     +[[0,0],[wW,0],[wW,0],[wW,0],[wW,0],[wW,0],[wW,0],[wW,0],[wW,0],[wW,0]]
     , //Rear + trckshift
@@ -134,10 +135,10 @@ linear_extrude(wW) polygon(points=concat(
     -[[0,0],[0,wW],[0,wW],[0,wW],[0,wW],[0,wW],[0,wW],[0,0]]
     //bottom line + trickshift
     ));
-    translate([totalHeight-iBHeight+wW,iBDepth,0])linear_extrude(1.02*wW)
+    translate([totalHeight-iBHeight+wW,iBDepth,0])
     polygon(points=[[29,0],[29,-wW],[59,-wW],[59,0]]);
     translate([totalHeight-iBHeight+2*wW,0,0])
-    linear_extrude(wW) polygon(points=
+    polygon(points=
     [[0,9],[-wW,9],[-wW,29],[0,29]]);
 }
 };
