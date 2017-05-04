@@ -14,10 +14,14 @@ slotDepth = 7.5;
 wW = 4;
 cRadius = 20;
 
+CardReaderWidth = 101;
+CardReaderHeight = 68;
+CardReaderDepth = 14;
+
 /*
  * Vizuals
  */
-flat = true;
+flat = false;
 spacing = 0*wW;
 
 //Dont change these values 251 230 85
@@ -42,13 +46,13 @@ trS1 = flat ? [width+spacing,0] : [width/2+spacing-wW/2,0,tHeight/2];
 rotS1 = flat ? [0,0,0] : [0,-90,0];
 color([0.12872938, 0.56326503, 0.55122927])
 translate(trS1) rotate(rotS1)
-sidePlate();
+sidePlate(false);
 
 trS2 = flat ? [-width-spacing,0] : [-width/2-spacing+wW/2,0,tHeight/2];
 rotS2 = flat ? [0,180,0] : [0,-90,0];
 color([0.12872938, 0.56326503, 0.55122927])
 translate(trS2) rotate(rotS2)
-sidePlate();
+sidePlate(true);
 
 trR = flat ? [0,-tHeight/2-tDepth/2-spacing,0] : [0,-tDepth/2+wW/2-spacing,tHeight/2];
 rotR = flat ? [0,0,0] : [90,0,0];
@@ -147,8 +151,7 @@ polygon(points = concat( // shorten all first and last lines
     ));
       cube([displayWidth,displayHeight,1.1*wW], center=true);
     }
-}
-    
+} 
 /* top plate */
 module topPlate(textStr,fontStr,size) {
 difference () {
@@ -191,10 +194,15 @@ module rearPlate() {
     linear_extrude(1.1*wW,center=true)
     polygon(points = genSide(180,[0,tHeight/2-iBHeight],width,2,wW,wW,wW));
     translate([0,iBHeight/2-displayBorder]) Klappe(false,1.1*wW);
+    # translate([width/2-cRadius,-tHeight/2+wW]) linear_extrude(1.1*wW,center=true)
+      intersection() {
+          circle(cRadius/2,$fn=90);
+          translate([-cRadius/2,-1.1*wW]) square([cRadius,cRadius/2+1.1*wW]);
+      };
   }
 }
 /* module for one side plate */
-module sidePlate() {
+module sidePlate(cardReader=false) {
   difference () {  
     linear_extrude(wW,center=true)
     polygon(points = concat(
@@ -210,14 +218,19 @@ module sidePlate() {
     //[[tHeight/2,-tDepth/2+depth],[tHeight/2,-tDepth/2]]  //top (backward)
     genSide(90,[tHeight/2,-tDepth/2+depth/2],depth,2,-wW,0,0)
     ));
-    translate([-iBHeight-wW-1,0]) //not yet sure why plus 1
-    linear_extrude(1.1*wW,center=true)
+    translate([-wW,0]) //not yet sure why plus 1
+    #linear_extrude(1.1*wW,center=true)
       //take side of innerBottomPlate and omit end points
-    polygon(points = genSide(90,[width/2-wW,-tDepth/2+iBDepth/2],iBDepth,1,wW,wW,wW,false,false));
-    translate([-iBHeight/2-wW+1,-depth-iBDepth/2+wW+1.5,0])
-    linear_extrude(1.1*wW,center=true)
+    polygon(points = genSide(90,[0,-tDepth/2+iBDepth/2],iBDepth,1,wW,wW,wW,false,false));
+    translate([0,0])
+    #linear_extrude(1.1*wW,center=true)
         //take side of innerFrontPlate and cut holes
-    polygon(points = genSide(0,[width/2-wW,iBHeight/2-wW/2],iBHeight-wW,2,wW,wW,wW,false,false));
+    polygon(points = genSide(0,[tHeight/2-iBHeight/2-wW/2,-tDepth/2+iBDepth-wW],iBHeight-wW,2,wW,wW,wW,false,false));
+    if (cardReader) {
+     linear_extrude(1.1*wW,center=true)
+       translate([-tHeight/2+CardReaderHeight/2+2*wW,-tDepth/2+CardReaderWidth/2+2*wW])
+       square([CardReaderHeight,CardReaderWidth],center=true);
+    }
   };
 }
 /* Module for the front Plate */
