@@ -77,12 +77,18 @@ translate([wW/2,0,0])
              [-slotWidth/2,1/3*depth+slotDepth/2],
              [slotWidth/2,1/3*depth+slotDepth/2],
              [slotWidth/2,1/3*depth-slotDepth/2]]);
-translate([0,iBDepth,0]) rotate(90,[1,0,0])
+translate([0,iBDepth]) rotate(90,[1,0,0])
     polygon(points=concat(
      [[width/2,0]],
-     genLine([width/2,wW],[-width/2+wW,iBHeight-wW],fH=1.02*wW,fC=2,cO=1,fTR=0)
+     genLine([width/2,wW],[-width/2+wW,iBHeight-wW],fH=1*wW,fC=2,cO=1,fTR=0)
      [[-width/2,0]]));
 }
+
+# translate([0,iBDepth]) rotate(90,[1,0,0])
+    polygon(points=concat(
+     [[width/2,0]],
+     genLine([width/2,wW],[-width/2+wW,iBHeight-wW],fH=1*wW,fC=2,cO=1,fTR=0)
+     [[-width/2,0]]));
 
 //Front
 color([.3,.7,.3])

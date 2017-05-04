@@ -16,7 +16,7 @@ cRadius = 20;
 
 //Visually
 asBox = 1; //(1) as box (0) as plane 
-extend = 0;//0.5*wW;//2*wW; //0=closed, otherwise whis is the distance between plates
+extend = 0.5*wW;//0.5*wW;//2*wW; //0=closed, otherwise whis is the distance between plates
 //Dont change these values
 side = displayHeight+2*displayBorder;
 sideHeight = side*sin(60);
@@ -24,6 +24,7 @@ sideWidth = side*cos(60);
 width = displayWidth+2*displayBorder-2*wW;
 totalDepth = depth+sideWidth+wW/2;
 totalHeight = sideHeight+height;
+
 //Bottom plate
 color([.7,.7,.7])
 linear_extrude(wW)
@@ -66,25 +67,20 @@ translate([width/2-displayBorder-cRadius, iBHeight-displayBorder-cRadius, 0])
 //Top
 color([.4,.7,.7])
 translate([0, wW, totalHeight+extend])
-difference() {
 linear_extrude(wW)
+difference() {
 polygon(points=concat( //2*wW on each because they all turn fingers inwards
     genLine([-width/2,0],[-width/2,depth],fH=wW,fC=2,fTR=0),
     genLine([-width/2,depth],[width/2+wW,depth],fH=wW,fC=2,cO=1),
     genLine([width/2,depth],[width/2,0],fH=wW,fC=2),
     genLine([width/2+wW,0],[-width/2,0],fH=wW,fC=2,cO=1)
     ));
-translate([wW/2,0,0])linear_extrude(1.02*wW)
+    translate([wW/2,0])
     polygon(points=[[-slotWidth/2,1/3*depth-slotDepth/2],
              [-slotWidth/2,1/3*depth+slotDepth/2],
              [slotWidth/2,1/3*depth+slotDepth/2],
              [slotWidth/2,1/3*depth-slotDepth/2]]);
-translate([0,iBDepth,-wW]) rotate(90,[1,0,0])
-linear_extrude(wW) polygon(points=concat(
-     [[width/2,0]],
-     genLine([width/2,wW],[-width/2+wW,iBHeight-wW],fH=1.02*wW,fC=2,cO=1,fTR=0)
-     [[-width/2,0]]));
-}
+};
 
 //Front
 color([.3,.7,.3])
@@ -117,7 +113,7 @@ polygon(points=[[-width/2+displayBorder,-side/2+displayBorder],
 }
 //Side plate
 translate([width/2+wW+extend,wW]) rotate(-90,[0,1,0]) sidePlate();
-translate([-width/2+wW+extend,wW]) rotate(-90,[0,1,0]) sidePlate();
+translate([-width/2+wW-extend,wW]) rotate(-90,[0,1,0]) sidePlate();
 
 module sidePlate() {
 difference() {
@@ -163,8 +159,6 @@ polygon(points=concat(//side
      [width/2,9],[width/2,0]],
     genLine([width/2,0],[-width/2,0],fH=wW,fC=2,cO=1,fTR=1)
     ));
-
-//Inner front
 color([.7,.4,0])
 translate([0,iBDepth+wW+extend,totalHeight-iBHeight+wW]) rotate(90,[1,0,0])
 linear_extrude(wW)
@@ -183,6 +177,7 @@ linear_extrude(wW)
      [width/2,29],[width/2,-wW]],
      genLine([width/2,iBHeight-wW],[-width/2+wW,iBHeight-wW],fH=wW,fC=2,cO=1,fTR=0)
     ));
+ /*
 //Klappe
 translate([0,wW,totalHeight-iBHeight+2*wW]) rotate(125,[1,0,0])
 linear_extrude(wW)

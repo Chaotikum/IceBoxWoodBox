@@ -17,7 +17,7 @@ cRadius = 20;
 /*
  * Vizuals
  */
-flat = false;
+flat = true;
 spacing = 0*wW;
 
 //Dont change these values 251 230 85
@@ -50,31 +50,31 @@ color([0.12872938, 0.56326503, 0.55122927])
 translate(trS2) rotate(rotS2)
 sidePlate();
 
-trR = flat ? [0,0,0] : [0,-tDepth/2+wW/2-spacing,tHeight/2];
+trR = flat ? [0,-tHeight/2-tDepth/2-spacing,0] : [0,-tDepth/2+wW/2-spacing,tHeight/2];
 rotR = flat ? [0,0,0] : [90,0,0];
 color([0.36074053, 0.78596419, 0.38781353])
 translate(trR) rotate(rotR)
 rearPlate();
 
-trT = flat ? [0,0,0] : [0,-depth/2-wW+1.5,tHeight-wW/2+spacing];
+trT = flat ? [0,-3*depth/2-tHeight-wW-2*spacing,0] : [0,-depth/2-wW+1.5,tHeight-wW/2+spacing];
 rotT = flat ? [0,0,0] : [0,0,0];
 color([0.15389405, 0.68020343, 0.50417217])
 translate(trT) rotate(rotT)
 topPlate("Spenden und Getränkekasse","Fira Sans",10);
 
-trD = flat ? [0,0,0] : [0,-.9+sideDepth/2-(wW-spacing)*sin(60),.9+tHeight-sideHeight/2-(wW-spacing)*cos(60)];
+trD = flat ? [0,FrontHeight/2+depth+height+2*spacing,0] : [0,-.9+sideDepth/2-(wW-spacing)*sin(60),.9+tHeight-sideHeight/2-(wW-spacing)*cos(60)];
 rotD = flat ? [0,0,0] : [120,0,0];
-color([0.66805369, 0.86199932, 0.19629307])
+#color([0.66805369, 0.86199932, 0.19629307])
 translate(trD) rotate(rotD)
 displayPlate();
 
-triB = flat ? [-width-spacing,-tDepth/2+spacing] : [0,0,tHeight-iBHeight-wW/2-spacing];
+triB = flat ? [width+wW+spacing,-tDepth/2+spacing+iBDepth/2+2*wW] : [0,0,tHeight-iBHeight-wW/2-spacing];
 rotiB = flat ? [0,0,0] : [0,0,0];
 color([0.27957399, 0.17059884, 0.47999675])
 translate(triB) rotate(rotiB)
 innerBottomPlate();
 
-triF = flat ? [width+spacing,-tDepth/2+spacing] 
+triF = flat ? [width+spacing,-tDepth/2+2*spacing-iBDepth-iBHeight/2-2*wW] 
     : [0,-depth+iBDepth-wW-0.5+spacing,tHeight-iBHeight/2-wW/2];
 // Also looking for this half a mm offset :/
 rotiF = flat ? [0,0,0] : [90,0,0];
@@ -82,7 +82,7 @@ color([0.2316735, 0.3181058, 0.54483444])
 translate(triF) rotate(rotiF)
 innerFrontPlate();
 
-trK = flat ? [0,0,0] : [0,-13-tDepth/2+wW/2-spacing,tHeight/2+iBHeight/2-displayBorder];
+trK = flat ? [-width-spacing,-iBHeight-2*displayBorder-spacing,0] : [0,-13-tDepth/2+wW/2-spacing,tHeight/2+iBHeight/2-displayBorder];
 rotK = flat ? [0,0,0] : [120,0,0];
 color([0.36074053, 0.78596419, 0.38781353])
 translate(trK) rotate(rotK)
