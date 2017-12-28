@@ -4,7 +4,7 @@
  */
 displayWidth = 170; //Width of the display-Slot
 displayHeight = 110; //Hewigh of the Display-Slot
-displayBorder = 20; //Border around the display
+displayBorder = 20+4; //Border around the display
 depth = 70;  // Depth behind end of upper end of display plate
 height = 70; // Height below display plate
 iBHeight = 100; //inner Box Height
@@ -37,10 +37,14 @@ color([0.26700401, 0.00487433, 0.32941519])
 translate(trB)
     bottomPlate();
 trF = flat ? [0,tDepth/2+height/2+spacing-wW,0] : [0,tDepth/2+spacing-wW/2,height/2];
-rotF = flat ? [0,0,0] : [90,0,00];
-color([0.99324789, 0.90615657, 0.1439362])
+rotF = flat ? [0,0,0] : [90,0,0];
+//color([0.99324789, 0.90615657, 0.1439362])
 translate(trF) rotate(rotF)
-    frontPlate("icebox.nobreakspace.org","Fira Sans",12); 
+    frontPlate("icebox.nobreakspace.org","Fira Sans",13.5); 
+
+translate([-width/2+2*wW,-tDepth/2+wW/2,2*wW]) rotate([90,0,0])
+    linear_extrude(wW)
+        text("by @kellertuer",font="Vollkorn",size=11,halign="left",valing="center");
 
 trS1 = flat ? [width+spacing,0] : [width/2+spacing-wW/2,0,tHeight/2];
 rotS1 = flat ? [0,0,0] : [0,-90,0];
@@ -54,6 +58,29 @@ color([0.12872938, 0.56326503, 0.55122927])
 translate(trS2) rotate(rotS2)
 sidePlate(true);
 
+color([0,0,1])
+translate([width/4,74,25]) rotate([90,0,180])
+scale(.4)
+union() {
+  linear_extrude(height = 4*wW, convexity = 10)
+    difference() {
+      import (file = "Parts/A-Base.dxf");
+      import (file = "Parts/B-holes.dxf");
+      translate([58,46])
+      text("C","Fira Sans",size=34);
+    }
+linear_extrude(height = 2*wW, convexity = 10)
+   import (file = "Parts/D-Feet.dxf");
+   translate([210,46])
+   linear_extrude(2*wW)
+        text("haotikum",font="Fira Sans",size=34,halign="center",valing="center");
+/*   translate([225,12])    
+   linear_extrude(wW)
+        text("chaotikum.org",font="Fira Sans",size=18,halign="center",valing="center");
+*/
+}
+
+
 trR = flat ? [0,-tHeight/2-tDepth/2-spacing,0] : [0,-tDepth/2+wW/2-spacing,tHeight/2];
 rotR = flat ? [0,0,0] : [90,0,0];
 color([0.36074053, 0.78596419, 0.38781353])
@@ -64,7 +91,7 @@ trT = flat ? [0,-3*depth/2-tHeight-wW-2*spacing,0] : [0,-depth/2-wW+1.5,tHeight-
 rotT = flat ? [0,0,0] : [0,0,0];
 color([0.15389405, 0.68020343, 0.50417217])
 translate(trT) rotate(rotT)
-topPlate("Spenden und Getränkekasse","Fira Sans",10);
+topPlate("Spenden und Getränkekasse","Fira Sans",12);
 
 trD = flat ? [0,FrontHeight/2+depth+height+2*spacing,0] : [0,-.9+sideDepth/2-(wW-spacing)*sin(60),.9+tHeight-sideHeight/2-(wW-spacing)*cos(60)];
 rotD = flat ? [0,0,0] : [120,0,0];
@@ -86,7 +113,7 @@ color([0.2316735, 0.3181058, 0.54483444])
 translate(triF) rotate(rotiF)
 innerFrontPlate();
 
-trK = flat ? [-width-spacing,-iBHeight-2*displayBorder-spacing,0] : [0,-13-tDepth/2+wW/2-spacing,tHeight/2+iBHeight/2-displayBorder];
+trK = flat ? [-width-spacing,-iBHeight-2*displayBorder-spacing,0] : [0,-tDepth/2+wW/2-spacing,tHeight/2+iBHeight/2-displayBorder];
 rotK = flat ? [0,0,0] : [120,0,0];
 color([0.36074053, 0.78596419, 0.38781353])
 translate(trK) rotate(rotK)
@@ -126,13 +153,13 @@ module innerBottomPlate() {
     linear_extrude(wW,center=true)
     polygon(points = concat(
 //    [[-width/2,-tDepth/2+iBDepth],[width/2,-tDepth/2+iBDepth]],    //front
-    genSide(0,[0,-tDepth/2+iBDepth-wW],width,5,wW,wW,wW),
+    genSide(0,[0,-tDepth/2+iBDepth-wW/2],width,5,wW,wW,wW),
 //    [[width/2,-tDepth/2+iBDepth],[width/2,-tDepth/2]], // left
-    genSide(90,[width/2-wW,-tDepth/2+iBDepth/2],iBDepth,1,wW,wW,wW),
+    genSide(90,[width/2-wW,-tDepth/2+iBDepth/2],iBDepth,1,wW,0,0),
 //    [[width/2,-tDepth/2],[-width/2,-tDepth/2]], //back
     genSide(180,[0,-tDepth/2+wW],width,2,wW,wW,wW),
 //    [[-width/2,-tDepth/2],[-width/2,-tDepth/2+iBDepth]] //right
-    genSide(270,[-width/2+wW,-tDepth/2+iBDepth/2],iBDepth,1,wW,wW,wW)
+    genSide(270,[-width/2+wW,-tDepth/2+iBDepth/2],iBDepth,1,wW,0,0)
     ));
 }
 /* Display Plate */
@@ -194,13 +221,14 @@ module rearPlate() {
     linear_extrude(1.1*wW,center=true)
     polygon(points = genSide(180,[0,tHeight/2-iBHeight],width,2,wW,wW,wW));
     translate([0,iBHeight/2-displayBorder]) Klappe(false,1.1*wW);
-    # translate([width/2-cRadius,-tHeight/2+wW]) linear_extrude(1.1*wW,center=true)
+    translate([width/2-cRadius,-tHeight/2+wW]) linear_extrude(1.1*wW,center=true)
       intersection() {
           circle(cRadius/2,$fn=90);
           translate([-cRadius/2,-1.1*wW]) square([cRadius,cRadius/2+1.1*wW]);
       };
   }
 }
+echo([tHeight/2,height/2,iBHeight/2]);
 /* module for one side plate */
 module sidePlate(cardReader=false) {
   difference () {  
@@ -218,14 +246,13 @@ module sidePlate(cardReader=false) {
     //[[tHeight/2,-tDepth/2+depth],[tHeight/2,-tDepth/2]]  //top (backward)
     genSide(90,[tHeight/2,-tDepth/2+depth/2],depth,2,-wW,0,0)
     ));
-    translate([-wW,0]) //not yet sure why plus 1
-    #linear_extrude(1.1*wW,center=true)
+    linear_extrude(1.1*wW,center=true)
       //take side of innerBottomPlate and omit end points
-    polygon(points = genSide(90,[0,-tDepth/2+iBDepth/2],iBDepth,1,wW,wW,wW,false,false));
+    polygon(points = genSide(90,[tHeight/2-iBHeight-wW,-tDepth/2+iBDepth/2],iBDepth,1,wW,wW,wW,false,false));
     translate([0,0])
-    #linear_extrude(1.1*wW,center=true)
+    linear_extrude(1.1*wW,center=true)
         //take side of innerFrontPlate and cut holes
-    polygon(points = genSide(0,[tHeight/2-iBHeight/2-wW/2,-tDepth/2+iBDepth-wW],iBHeight-wW,2,wW,wW,wW,false,false));
+    polygon(points = genSide(0,[tHeight/2-iBHeight/2-wW/2,-tDepth/2+iBDepth-wW/2],iBHeight-wW,2,wW,wW,wW,false,false));
     if (cardReader) {
      linear_extrude(1.1*wW,center=true)
        translate([-tHeight/2+CardReaderHeight/2+2*wW,-tDepth/2+CardReaderWidth/2+2*wW])
@@ -247,9 +274,10 @@ module frontPlate(textStr,fontStr,size) {
 //    [[-width/2,-height/2], [-width/2, height/2]] // right
     genSide(270,[-width/2+wW,0],height,2,wW,0,0)
     ));
-    rotate([0,180,0]) translate([0,-height/4,wW/2])
-    linear_extrude(wW,center=true)
-    text(textStr,fontStr,size=size,halign="center",valing="center");
+    color([0,0,1])
+        rotate([0,180,0]) translate([0,-6*height/16,wW/2])
+        linear_extrude(wW,center=true)
+        text(textStr,fontStr,size=size,halign="center",valing="center");
 //    }
 }
 /* Module for the bottom plate */
